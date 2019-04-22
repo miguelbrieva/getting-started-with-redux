@@ -1,46 +1,41 @@
 const deepFreeze = require('deep-freeze');
 const expect = require('expect');
 
-const toggleTodo = todo => {
-  // Mutated Version
-  // console.log(todo);
-  // todo.completed = !todo.completed;
-  // console.log(todo);
-  // return todo;
-
-  // Most basic Version
-  // return {
-  //   id: 0,
-  //   text: 'Learn Redux',
-  //   completed: !todo.completed
-  // }
-
-  // Object.assign Version
-  // return Object.assign({}, todo, {
-  //   completed: !todo.completed
-  // });
-
-  // Spread Operator Solution
-  return {
-    ...todo,
-    completed: !todo.completed
-  };
+// Reducer
+const todos = (state = [], action) => {
+  switch (action.type) {
+    case 'ADD_TODO':
+      return [
+        ...state,
+        {
+          id: action.id,
+          text: action.text,
+          completed: false,
+        },
+      ];
+    default:
+      return state;
+  }
 };
 
-const testToggleTodo = () => {
-  const todoBefore = {
+const testAddTodo = () => {
+  const stateBefore = [];
+  const action = {
+    type: 'ADD_TODO',
     id: 0,
     text: 'Learn Redux',
-    completed: false
   };
-  const todoAfter = {
-    id: 0,
-    text: 'Learn Redux',
-    completed: true
-  };
-  deepFreeze(todoBefore);
-  expect(toggleTodo(todoBefore)).toEqual(todoAfter);
+  const stateAfter = [
+    {
+      id: 0,
+      text: 'Learn Redux',
+      completed: false,
+    },
+  ];
+  deepFreeze(stateBefore);
+  deepFreeze(action);
+  expect(todos(stateBefore, action)).toEqual(stateAfter);
 };
 
-testToggleTodo();
-console.log('All tests passed.');
+testAddTodo();
+console.log('All test passed.');
