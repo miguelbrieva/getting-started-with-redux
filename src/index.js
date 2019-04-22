@@ -1,53 +1,46 @@
 const deepFreeze = require('deep-freeze');
 const expect = require('expect');
 
-const addCounter = list => {
-  // return list.push(0) // Mutable method
-  // return list.concat([0]); // Unmutable method. That's OK!
-  return [...list, 0]; // ES6 version. It's OK too.
+const toggleTodo = todo => {
+  // Mutated Version
+  // console.log(todo);
+  // todo.completed = !todo.completed;
+  // console.log(todo);
+  // return todo;
+
+  // Most basic Version
+  // return {
+  //   id: 0,
+  //   text: 'Learn Redux',
+  //   completed: !todo.completed
+  // }
+
+  // Object.assign Version
+  // return Object.assign({}, todo, {
+  //   completed: !todo.completed
+  // });
+
+  // Spread Operator Solution
+  return {
+    ...todo,
+    completed: !todo.completed
+  };
 };
 
-const removeCounter = (list, index) => {
-  // list.splice(index, 1); // Mutable. Change the content of an array by removing or replacing elements
-  // return list;
-  // return list.slice(0, index).concat(list.slice(index + 1)); // Unmutable method.
-  // return list.slice(0, index).concat(list.slice(index + 1)); // Unmutable method.
-  return [...list.slice(0, index), ...list.slice(index + 1)];
+const testToggleTodo = () => {
+  const todoBefore = {
+    id: 0,
+    text: 'Learn Redux',
+    completed: false
+  };
+  const todoAfter = {
+    id: 0,
+    text: 'Learn Redux',
+    completed: true
+  };
+  deepFreeze(todoBefore);
+  expect(toggleTodo(todoBefore)).toEqual(todoAfter);
 };
 
-const incrementCounter = (list, index) => {
-  // list[index]++; // Mutable.
-  // return list;
-  // return list
-  //   .slice(0, index)
-  //   .concat([list[index] + 1])
-  //   .concat(list.slice(index + 1));
-
-  return [...list.slice(0, index), list[index] + 1, ...list.slice(index + 1)];
-};
-
-const testAddCounter = () => {
-  const listBefore = [];
-  const listAfter = [0];
-  deepFreeze(listBefore);
-  expect(addCounter(listBefore)).toEqual(listAfter);
-};
-
-const testRemoveCounter = () => {
-  const listBefore = [0, 10, 20];
-  const listAfter = [0, 20];
-  deepFreeze(listBefore);
-  expect(removeCounter(listBefore, 1)).toEqual(listAfter);
-};
-
-const testIncrementCounter = () => {
-  const listBefore = [0, 10, 20];
-  const listAfter = [0, 11, 20];
-  deepFreeze(listBefore);
-  expect(incrementCounter(listBefore, 1)).toEqual(listAfter);
-};
-
-testAddCounter();
-testRemoveCounter();
-testIncrementCounter();
+testToggleTodo();
 console.log('All tests passed.');
