@@ -1,4 +1,5 @@
-const { createStore } = require('redux');
+// const { createStore } = require('redux');
+const { createStore, combineReducers } = require('redux');
 
 const todo = (state, action) => {
   switch (action.type) {
@@ -41,14 +42,31 @@ const visibilityFilter = (state = 'SHOW_ALL', action) => {
   }
 };
 
-const todoApp = (state = {}, action) => {
-  return {
-    todos: todos(state.todos, action),
-    visibilityFilter: visibilityFilter(state.visibilityFilter, action),
-  };
-};
+// Reduce a group of reducers. This is a very common pattern.
+// const todoApp = (state = {}, action) => {
+//   return {
+//     todos: todos(state.todos, action),
+//     visibilityFilter: visibilityFilter(state.visibilityFilter, action),
+//   };
+// };
+
+// const combineReducers = reducers => {
+//   return (state = {}, action) => {
+//     return Object.keys(reducers).reduce((nextState, key) => {
+//       nextState[key] = reducers[key](state[key], action);
+//       return nextState;
+//     });
+//   };
+// };
+
+// Generrate a reducer from several other reducers intead of writing it by hand
+const todoApp = combineReducers({
+  todos,
+  visibilityFilter,
+});
 
 const store = createStore(todoApp);
+
 
 console.log('Initial state:');
 console.log(store.getState());
