@@ -1,5 +1,5 @@
-// const { createStore } = require('redux');
-const { createStore, combineReducers } = require('redux');
+const { createStore } = require('redux');
+// const { createStore, combineReducers } = require('redux');
 
 const todo = (state, action) => {
   switch (action.type) {
@@ -50,14 +50,15 @@ const visibilityFilter = (state = 'SHOW_ALL', action) => {
 //   };
 // };
 
-// const combineReducers = reducers => {
-//   return (state = {}, action) => {
-//     return Object.keys(reducers).reduce((nextState, key) => {
-//       nextState[key] = reducers[key](state[key], action);
-//       return nextState;
-//     });
-//   };
-// };
+// Reimplementation of combineReducers()
+const combineReducers = reducers => {
+  return (state = {}, action) => {
+    return Object.keys(reducers).reduce((nextState, key) => {
+      nextState[key] = reducers[key](state[key], action);
+      return nextState;
+    }, {});
+  };
+};
 
 // Generrate a reducer from several other reducers intead of writing it by hand
 const todoApp = combineReducers({
@@ -66,7 +67,6 @@ const todoApp = combineReducers({
 });
 
 const store = createStore(todoApp);
-
 
 console.log('Initial state:');
 console.log(store.getState());
@@ -109,3 +109,22 @@ store.dispatch({
 console.log('Current state:');
 console.log(store.getState());
 console.log('--------------');
+
+// /*******************************************************************
+//  * The reduce() method executes a reducer function (that you provide)
+//  * on each member of the array resulting in a single output value*/
+// const array1 = [1, 3, 5];
+// const reducer = (accumulator, currentValue) => accumulator + currentValue;
+// console.log(array1.reduce(reducer)); // 9
+// /*******************************************************************/
+
+// /*******************************************************************
+//  * Object.keys() method return an array of a given object's own
+//  * property names, in the same order a we get with a normal loop*/
+// const object1 = {
+//   a: 'somestring',
+//   b: 42,
+//   c: false,
+// };
+// console.log(Object.keys(object1)); // ["a", "b", "c"]
+// /*******************************************************************/
